@@ -112,7 +112,7 @@ def library_api(request, library_id):
     1) Сделать с помощью view из drf --OK
     2) Сделать все CRUD методы --OK
     3) Сделать метод для просмотра списка --OK
-    4) Сделать метод для просмотра всех книг в этой библиотеке
+    4) Сделать метод для просмотра всех книг в этой библиотеке --OK
     """
     try:
         return JsonResponse(model_to_dict(Library.objects.get(id=library_id)))
