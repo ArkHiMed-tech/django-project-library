@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("books/", include("books.urls")),  # TODO [замечание] Лучше заменить books/ на api/
+    path("api/", include("books.urls")),  # TODO [замечание] Лучше заменить books/ на api/ --OK
     path("admin/", admin.site.urls),
 ]

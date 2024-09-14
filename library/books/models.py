@@ -8,8 +8,8 @@ class Library(models.Model):
 
 
 class Book(models.Model):
-    name = models.CharField(primary_key=True, max_length=50)
+    name = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
-    path = models.CharField(unique=True, max_length=200)  # TODO [задача] сделай здесь именно поле с файлом
+    file = models.FileField(blank=True)  # TODO [задача] сделай здесь именно поле с файлом --OK
     creation_date = models.DateField(default=django.utils.timezone.now)
     library = models.ForeignKey(Library, on_delete=models.CASCADE)
