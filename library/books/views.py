@@ -10,7 +10,10 @@ from rest_framework import status
 from .models import Library, Book
 from .serializers import LibrarySerialiser, BookSerialiser
 
-
+"""
+TODO[правки]:
+Везде добавь поле id для библиотеки
+"""
 class LibraryList(APIView):
     def get(self, request, format=None):
         snippets = Library.objects.all()
@@ -18,6 +21,7 @@ class LibraryList(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
+        print(request.data)
         serializer = LibrarySerialiser(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -27,6 +31,7 @@ class LibraryList(APIView):
 
 class LibraryView(APIView):
     def get_object(self, id):
+        # todo [замечание]: это странный способ, но в целом рабочий, лучше перенести это в какой-нибудь LibraryMixin, погугли что такое Mixin в джанго
         try:
             return Library.objects.get(id=id)
         except Library.DoesNotExist:
@@ -54,11 +59,10 @@ class LibraryView(APIView):
 class LibraryBooks(APIView):
     def get(self, request, id):
         books = []
-        for i in BookSerialiser(Book.objects.all(), many=True).data:
+        for i in BookSerialiser(Book.objects.all(), many=True).data:  # todo: почитай доку django orm, это плохой способ, а еще сериалайзер тут кривоватый)
             if i['library'] == id:
                 books.append(i)
-        return Response(books)
-
+        return Response(books)  # todo: сериалайзер лучше здесь
 
 
 class BookList(APIView):
@@ -108,11 +112,8 @@ class BookView(APIView):
 
 def library_api(request, library_id):
     """
-    TODO [задачки]
-    1) Сделать с помощью view из drf --OK
-    2) Сделать все CRUD методы --OK
-    3) Сделать метод для просмотра списка --OK
-    4) Сделать метод для просмотра всех книг в этой библиотеке --OK
+    TODO [правки]
+    А зачем тебе эта функция? Если не используешь - убери
     """
     try:
         return JsonResponse(model_to_dict(Library.objects.get(id=library_id)))
@@ -121,11 +122,8 @@ def library_api(request, library_id):
     
 def book_api(request, book_id):
     """
-    TODO [задачки]
-    1) Сделать с помощью view из drf --OK
-    2) Сделать все CRUD методы --OK
-    3) Сделать метод для просмотра списка --OK
-    4) Сделать фильтры (чтобы можно было фильтровать по полям) --OK
+    TODO [правки]
+    А зачем тебе эта функция? Если не используешь - убери
     """
     try:
         return JsonResponse(model_to_dict(Book.objects.get(id=book_id)))

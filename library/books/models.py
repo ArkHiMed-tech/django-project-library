@@ -10,6 +10,6 @@ class Library(models.Model):
 class Book(models.Model):
     name = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
-    file = models.FileField(blank=True)  # TODO [задача] сделай здесь именно поле с файлом --OK
+    file = models.FileField(blank=True)
     creation_date = models.DateField(default=django.utils.timezone.now)
     library = models.ForeignKey(Library, on_delete=models.CASCADE)
