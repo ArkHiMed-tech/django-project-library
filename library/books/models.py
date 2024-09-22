@@ -4,10 +4,12 @@ import datetime
 
 # Create your models here.
 class Library(models.Model):
+    id = models.IntegerField(primary_key=True)
     address = models.CharField(max_length=100)
 
 
 class Book(models.Model):
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
     file = models.FileField(blank=True)

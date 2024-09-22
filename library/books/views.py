@@ -9,11 +9,9 @@ from rest_framework import status
 
 from .models import Library, Book
 from .serializers import LibrarySerialiser, BookSerialiser
+from .utils import LibraryMixin
 
-"""
-TODO[правки]:
-Везде добавь поле id для библиотеки
-"""
+
 class LibraryList(APIView):
     def get(self, request, format=None):
         snippets = Library.objects.all()
@@ -29,14 +27,7 @@ class LibraryList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LibraryView(APIView):
-    def get_object(self, id):
-        # todo [замечание]: это странный способ, но в целом рабочий, лучше перенести это в какой-нибудь LibraryMixin, погугли что такое Mixin в джанго
-        try:
-            return Library.objects.get(id=id)
-        except Library.DoesNotExist:
-            raise Http404
-        
+class LibraryView(LibraryMixin, APIView):        
     def get(self, request, id):
         lib = self.get_object(id)
         serialiser = LibrarySerialiser(lib)
@@ -58,11 +49,9 @@ class LibraryView(APIView):
 
 class LibraryBooks(APIView):
     def get(self, request, id):
-        books = []
-        for i in BookSerialiser(Book.objects.all(), many=True).data:  # todo: почитай доку django orm, это плохой способ, а еще сериалайзер тут кривоватый)
-            if i['library'] == id:
-                books.append(i)
-        return Response(books)  # todo: сериалайзер лучше здесь
+        lib = Library.objects.get(id=id)
+        books = Book.objects.filter(library=lib)
+        return Response(BookSerialiser(books, many=True).data)
 
 
 class BookList(APIView):
@@ -107,26 +96,3 @@ class BookView(APIView):
         book = self.get_object(id)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-def library_api(request, library_id):
-    """
-    TODO [правки]
-    А зачем тебе эта функция? Если не используешь - убери
-    """
-    try:
-        return JsonResponse(model_to_dict(Library.objects.get(id=library_id)))
-    except Library.DoesNotExist:
-        return JsonResponse('Lib not found', safe=False)
-    
-def book_api(request, book_id):
-    """
-    TODO [правки]
-    А зачем тебе эта функция? Если не используешь - убери
-    """
-    try:
-        return JsonResponse(model_to_dict(Book.objects.get(id=book_id)))
-    except Book.DoesNotExist:
-        return JsonResponse('Book not found', safe=False)
-
