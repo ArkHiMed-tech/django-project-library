@@ -12,3 +12,12 @@ class BookSerialiser(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ['name', 'author', 'creation_date', 'library', 'file']
+
+
+class DummyDetailSerializer(serializers.Serializer):
+    status = serializers.IntegerField()
+
+
+class DummyDetailAndStatusSerializer(serializers.Serializer):
+    status = serializers.IntegerField()
+    details = serializers.CharField()
